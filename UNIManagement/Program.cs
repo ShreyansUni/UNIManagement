@@ -26,6 +26,8 @@ builder.Services.AddScoped<IAttandanceRepository, AttandanceRepository>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 builder.Services.AddScoped<IJwtTokenRepository,JwtTokenRepository>();
 builder.Services.AddScoped<ILeaveRequestRepository,LeaveRequestRepository>();
+builder.Services.AddScoped<IWorkLogRepository, WorkLogRepository>();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); 

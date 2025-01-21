@@ -37,10 +37,12 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<Project> Projects { get; set; }
 
     public virtual DbSet<ProjectAttachment> ProjectAttachments { get; set; }
+    public virtual DbSet<WorkLog> WorkLogs { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("User ID = postgres;Password=rahulshah;Server=localhost;Port=5432;Database=UNI_ManagementDB;Integrated Security=true;Pooling=true;");
+        => optionsBuilder.UseNpgsql("User ID = postgres;Password=1234;Server=localhost;Port=5432;Database=UNI_ManagementDB;Integrated Security=true;Pooling=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -122,6 +124,12 @@ public partial class ApplicationDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProjectAttachment_to_Project");
         });
+
+        modelBuilder.Entity<WorkLog>(entity =>
+        {
+            entity.HasKey(e => e.WorkLogId).HasName("WorkLog_pkey");
+        });
+
 
         OnModelCreatingPartial(modelBuilder);
     }
