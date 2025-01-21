@@ -1,0 +1,226 @@
+﻿@model UNIManagement.Entities.ViewModel.ClientViewModel;
+@using System;
+@using System.IO;
+
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<!--begin::Content-->
+<div class=" d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <form id="clientForm" asp-action="AddEdit" asp-controller="Client" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!--begin::Card CLient-->
+                        <div class="card">
+                            <div class="card-header pt-5">
+                                <div class="col-md-6">
+                                    <h1>Client Details</h1>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <a class="btn rounded-2  border-primary" onclick="history.back()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5" />
+                                        </svg>Back
+                                    </a>
+                                </div>
+                            </div>
+                            <!--begin::Card body-->
+                            <div class="card-body pt-5">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <input type="hidden" asp-for="ClientId" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="Name">Name</label>
+                                        <input type="text" asp-for="Name" class="form-control" />
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="Number"></label>
+                                        <input type="text" asp-for="Number" class="form-control" />
+                                        <span asp-validation-for="Number" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row pt-5">
+                                   
+                                    <div class="col-md-6">
+                                        <label asp-for="Email">Email</label>
+                                        @if (Model == null)
+                                        {
+                                            <input type="email" asp-for="Email" class="form-control" />
+                                        }
+                                        else
+                                        {
+                                            <input type="email" readonly asp-for="Email" class="form-control" />
+                                        }
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                       
+                                                <label asp-for="BirthDate"></label>
+                                                <input type="date" asp-for="BirthDate" id="txtFrmDate" class="form-control" />
+                                                <span asp-validation-for="BirthDate" class="text-danger"></span>
+
+
+                                      
+                                    </div>
+                                </div>
+                                <div class="row pt-5">
+                                    <div class="col-md-12">
+                                        <label asp-for="Address"></label>
+                                        <textarea type="text" asp-for="Address" class="form-control"></textarea>
+                                        <span asp-validation-for="Address" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row pt-5">
+                                    <div class="form-check">
+                                        @if (Model == null)
+                                        {
+                                            <input class="form-check-input" type="checkbox" value="" id="kt_check_indeterminate_1" value="True" asp-for="IsActive" checked />
+                                        }
+                                        else
+                                        {
+                                            <input class="form-check-input" type="checkbox" value="" id="kt_check_indeterminate_1" value="True" asp-for="IsActive" />
+                                        }
+                                        <label class="form-check-label" for="kt_check_indeterminate_1">
+                                            Is Active
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                    <!--end::Card CLient-->
+                </div>
+
+
+                <div class="row pt-5">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header pt-5">
+                                <h1>Business Details</h1>
+                            </div>
+                            <div class="card-body">
+                                <div class="row pt-5">
+                                    <div class="col-md-4">
+                                        <label asp-for="BusinessName"></label>
+                                        <input type="text" asp-for="BusinessName" class="form-control" />
+                                        <span asp-validation-for="BusinessName" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label asp-for="BusinessNumber"></label>
+                                        <input type="number" asp-for="BusinessNumber" class="form-control" />
+                                        <span asp-validation-for="BusinessNumber" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label asp-for="Category"></label>
+                                        <input type="text" asp-for="Category" class="form-control" />
+                                        <span asp-validation-for="Category" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row pt-5">
+                                    <div class="col-md-6">                                       
+                                        <label>Additional Information</label>
+                                        <input type="file" asp-for="Additioninfo" class="form-control" />
+                                        <span asp-validation-for="Additioninfo" class="text-danger"></span>
+                                      
+                                    </div>
+
+                                    <div class="col-md-6 pt-7">
+                                        @if (Model != null && !string.IsNullOrEmpty(Model.AdditionInformation))
+                                        {
+                                            <a href="~/Documents/Client/@Model.ClientId/Information.pdf" target="_blank">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-file-pdf-fill" viewBox="0 0 16 16">
+                                                    <path d="M5.523 10.424q.21-.124.459-.238a8 8 0 0 1-.45.606c-.28.337-.498.516-.635.572l-.035.012a.3.3 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548m2.455-1.647q-.178.037-.356.078a21 21 0 0 0 .5-1.05 12 12 0 0 0 .51.858q-.326.048-.654.114m2.525.939a4 4 0 0 1-.435-.41q.344.007.612.054c.317.057.466.147.518.209a.1.1 0 0 1 .026.064.44.44 0 0 1-.06.2.3.3 0 0 1-.094.124.1.1 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256M8.278 4.97c-.04.244-.108.524-.2.829a5 5 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.5.5 0 0 1 .145-.04c.013.03.028.092.032.198q.008.183-.038.465z" />
+                                                    <path fill-rule="evenodd" d="M4 0h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m.165 11.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.6 11.6 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.86.86 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.84.84 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.8 5.8 0 0 0-1.335-.05 11 11 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.24 1.24 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a20 20 0 0 1-1.062 2.227 7.7 7.7 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103" />
+                                                </svg>
+                                            </a>
+                                        }
+                                       
+                                    </div> 
+                                     
+                                
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row pt-5">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header pt-5">
+                                <h1>Refference Details</h1>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label asp-for="RefferenceDetails"></label>
+                                        <textarea type="text" id="editor1" asp-for="RefferenceDetails"></textarea>
+                                        <script>             
+                                            let editorInstance;
+                                            ClassicEditor
+                                                .create(document.querySelector('#editor1'))
+                                                .then(editor1 => {
+                                                    editorInstance = editor1;
+                                                    console.log(editor1);
+                                                })
+                                                .catch(error => {
+                                                    console.error(error);
+                                                });
+                                            document.getElementById('clientForm').addEventListener('reset', () => {
+                                                if (editorInstance) {
+                                                    editorInstance.setData(''); // Clear CKEditor content
+                                                }
+                                            });
+                                        </script>
+                                        <span asp-validation-for="RefferenceDetails" class="text-danger"></span>
+                                     
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group pt-5 text-center">                                   
+                                    <button type="reset" class="btn btn-danger">Reset</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    @* <button type="button" class="btn btn-primary" onclick="confirmEdit('@Model.Name')">Submit</button>                                   *@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+<!--end::Content-->
+<script>
+    // function confirmEdit(clientName) {
+    //     debugger
+    //     Swal.fire({
+    //         title: 'Are you sure?',
+    //         text: `You are about to edit the client: ${clientName}.`,
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: 'Yes, edit it!'
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             // You can either navigate to the edit action or submit the form here
+    //             document.getElementById('clientForm').submit();
+    //         }
+    //     });
+    // }
+</script>
