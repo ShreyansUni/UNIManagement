@@ -20,4 +20,6 @@ html {
 body {
   margin-bottom: 60px;
 }
-
+.btn:hover{
+    color:white !important;
+}

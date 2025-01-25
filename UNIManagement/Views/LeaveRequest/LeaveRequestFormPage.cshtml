@@ -24,7 +24,72 @@
             <span asp-validation-for="ReasonForLeave" class="text-danger"></span>
 
         </div>
-        <!-- Leave Start Date & Duration -->
+           @* <!-- Leave Start Date & Duration -->
+           <div class="row mb-3">
+               <div class="col-md-6">
+                   <label for="start_date" class="form-label">Leave Start Date <span class="text-danger">*</span></label>
+                   <input asp-for="LeaveStartDate"
+                          onchange="calculateLeaveDuration()"
+                          id="startDate"
+                          min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                          type="date"
+                          value="@(Model.LeaveStartDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd"))"
+                          class="form-control">
+                   <span asp-validation-for="LeaveStartDate" class="text-danger"></span>
+
+               </div>
+               <div class="col-md-6">
+                   <label for="start_duration" class="form-label">Duration</label>
+                   <select asp-for="LeaveStartType" id="start_duration" class="form-select">
+                       <option selected value=1>Full Day</option>
+                       <option value=2>Half Day</option>
+                   </select>
+                   <span asp-validation-for="LeaveStartType" class="text-danger"></span>
+               </div>
+           </div>
+
+           <!-- Leave End Date & Duration -->
+           <div class="row mb-3">
+               <div class="col-md-6">
+                   <label for="end_date" class="form-label">Leave End Date <span class="text-danger">*</span></label>
+                   <input asp-for="LeaveEndDate"
+                          onchange="calculateLeaveDuration()"
+                          value="@(Model.LeaveEndDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd"))"
+                          min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                          type="date"
+                          id="endDate"
+                          class="form-control" />
+
+                   <span asp-validation-for="LeaveEndDate" class="text-danger"></span>
+
+               </div>
+               <div class="col-md-6">
+                   <label for="end_duration" class="form-label">Duration</label>
+                   <select asp-for="LeaveEndType" id="end_duration" class="form-select">
+                       <option value=1 selected>Full Day</option>
+   @*                      <option value=2>Half Day</option> *
+                   </select>
+                   <span asp-validation-for="LeaveEndType" class="text-danger"></span>
+
+               </div>
+           </div>
+
+           <!-- Actual and Total Leave Duration -->
+           <div class="row mb-3">
+               <div class="col-md-6">
+                   <label for="actual_duration" class="form-label">Actual Leave Duration</label>
+                   <input asp-for="ActualLeaveDuration" type="number" value=@(Model.ActualLeaveDuration!=default?Model.ActualLeaveDuration:1) id="workingDaysHolidayInput" readonly class="form-control">
+                   <span asp-validation-for="ActualLeaveDuration" class="text-danger"></span>
+
+               </div>
+               <div class="col-md-6">
+                   <label for="total_duration" class="form-label">Total Leave Duration</label>
+                   <input asp-for="TotalLeaveDuration" type="number" value=@(Model.TotalLeaveDuration!=default?Model.TotalLeaveDuration:1) id="totalDaysHolidayInput" class="form-control" readonly>
+                   <span asp-validation-for="TotalLeaveDuration" class="text-danger"></span>
+
+               </div>
+           </div> *@
+
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="start_date" class="form-label">Leave Start Date <span class="text-danger">*</span></label>
@@ -36,20 +101,17 @@
                        value="@(Model.LeaveStartDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd"))"
                        class="form-control">
                 <span asp-validation-for="LeaveStartDate" class="text-danger"></span>
-
             </div>
             <div class="col-md-6">
                 <label for="start_duration" class="form-label">Duration</label>
-                <select asp-for="LeaveStartType" id="start_duration" class="form-select">
-                    <option selected value=1>Full Day</option>
-                    <option value=2>Half Day</option>
+                <select asp-for="LeaveStartType" id="start_duration" class="form-select" onchange="calculateLeaveDuration()">
+                    <option selected value="1">Full Day</option>
+                    <option value="2">Half Day</option>
                 </select>
                 <span asp-validation-for="LeaveStartType" class="text-danger"></span>
-
             </div>
         </div>
 
-        <!-- Leave End Date & Duration -->
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="end_date" class="form-label">Leave End Date <span class="text-danger">*</span></label>
@@ -60,34 +122,30 @@
                        type="date"
                        id="endDate"
                        class="form-control" />
-
                 <span asp-validation-for="LeaveEndDate" class="text-danger"></span>
-
             </div>
             <div class="col-md-6">
                 <label for="end_duration" class="form-label">Duration</label>
-                <select asp-for="LeaveEndType" id="end_duration" class="form-select">
-                    <option value=1 selected>Full Day</option>
-                    <option value=2>Half Day</option>
+                <select asp-for="LeaveEndType" readonly id="end_duration" class="form-select" onchange="calculateLeaveDuration()">
+                    <option value="1" selected>Full Day</option>
+                    <option value="2">Half Day</option>
                 </select>
                 <span asp-validation-for="LeaveEndType" class="text-danger"></span>
-
             </div>
         </div>
 
-        <!-- Actual and Total Leave Duration -->
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="actual_duration" class="form-label">Actual Leave Duration</label>
-                <input asp-for="ActualLeaveDuration" type="number" value=@(Model.ActualLeaveDuration!=default?Model.ActualLeaveDuration:1) id="workingDaysHolidayInput" readonly class="form-control">
+                <input asp-for="ActualLeaveDuration" type="number" value="@(Model.ActualLeaveDuration != default ? Model.ActualLeaveDuration : 1)"
+                       id="workingDaysHolidayInput" readonly class="form-control">
                 <span asp-validation-for="ActualLeaveDuration" class="text-danger"></span>
-
             </div>
             <div class="col-md-6">
                 <label for="total_duration" class="form-label">Total Leave Duration</label>
-                <input asp-for="TotalLeaveDuration" type="number" value=@(Model.TotalLeaveDuration!=default?Model.TotalLeaveDuration:1) id="totalDaysHolidayInput" class="form-control" readonly>
+                <input asp-for="TotalLeaveDuration" type="number" value="@(Model.TotalLeaveDuration != default ? Model.TotalLeaveDuration : 1)"
+                       id="totalDaysHolidayInput" class="form-control" readonly>
                 <span asp-validation-for="TotalLeaveDuration" class="text-danger"></span>
-
             </div>
         </div>
 
@@ -103,7 +161,6 @@
                 <label for="requested_date" class="form-label">Requested Date</label>
                 <input asp-for="RequestedDate" type="date" readonly id="requested_date" class="form-control" value="@(Model.RequestedDate!=default?Model.RequestedDate.ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))">
                 <span asp-validation-for="RequestedDate" class="text-danger"></span>
-
             </div>
         </div>
 
@@ -113,7 +170,6 @@
                 <label for="phone_no" class="form-label">Phone No. <span class="text-danger">*</span></label>
                 <input asp-for="PhoneNumber" type="text" id="phone_no" class="form-control">
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-
             </div>
             <div class="col-md-6">
                 <label for="alt_phone_no" class="form-label">Alternate Phone No.</label>
@@ -142,47 +198,127 @@
     </form>
 </div>
 <script>
-    function calculateLeaveDuration() {
-        let startDateInput = document.getElementById("startDate");
-        let endDateInput = document.getElementById("endDate");
-        let returnDateInput = document.getElementById("return_date");
-        let endDurationSelect = document.getElementById("end_duration");
-        let totalDaysInput = document.getElementById("totalDaysHolidayInput");
-        let actualLeaveDurationInput = document.getElementById("workingDaysHolidayInput");
 
-        let startDate = new Date(startDateInput.value);
-        let endDate = new Date(endDateInput.value);
+    // function calculateLeaveDuration() {
+    //     let startDateInput = document.getElementById("startDate");
+    //     let endDateInput = document.getElementById("endDate");
+    //     let returnDateInput = document.getElementById("return_date");
+    //     let endDurationSelect = document.getElementById("end_duration");
+    //     let totalDaysInput = document.getElementById("totalDaysHolidayInput");
+    //     let actualLeaveDurationInput = document.getElementById("workingDaysHolidayInput");
 
-        endDateInput.min = startDateInput.value;
-        // Ensure End Date is not before Start Date
-        if (endDate < startDate) {
-            endDateInput.value = startDateInput.value;
-            endDate = new Date(startDateInput.value);
+    //     let startDate = new Date(startDateInput.value);
+    //     let endDate = new Date(endDateInput.value);
+
+    //     endDateInput.min = startDateInput.value;
+    //     Ensure End Date is not before Start Date
+    //     if (endDate < startDate) {
+    //         endDateInput.value = startDateInput.value;
+    //         endDate = new Date(startDateInput.value);
+    //     }
+
+    //     Set Return Date to one day after End Date
+    //     let returnDate = new Date(endDate);
+    //     returnDate.setDate(returnDate.getDate() + 1);
+    //     returnDateInput.value = returnDate.toISOString().split('T')[0];
+
+    //     Disable End Duration if Start Date equals End Date
+    //     if (startDate.toISOString().split('T')[0] === endDate.toISOString().split('T')[0]) {
+    //         endDurationSelect.disabled = true;
+    //     } else {
+    //         endDurationSelect.disabled = false;
+    //     }
+
+    //     Calculate total leave duration and update input
+    //     let totalDays = getDaysDifference(startDate, endDate) + 1; +1 to include both start and end dates
+    //     totalDaysInput.value = totalDays;
+
+    //     Subtract Sundays to get Actual Leave Duration
+    //     let sundayCount = countSundays(startDateInput.value, endDateInput.value);
+    //     let actualLeaveDuration = totalDays - sundayCount;
+
+    //     Update Actual Leave Duration
+    //     actualLeaveDurationInput.value = actualLeaveDuration;
+    // }
+    // -------------------------------------------------------------------------------------------
+    // function calculateLeaveDuration() {
+    //     let startDateInput = document.getElementById("startDate");
+    //     let endDateInput = document.getElementById("endDate");
+    //     let returnDateInput = document.getElementById("return_date");
+    //     let startDurationSelect = document.getElementById("start_duration");
+    //     let endDurationSelect = document.getElementById("end_duration");
+    //     let totalDaysInput = document.getElementById("totalDaysHolidayInput");
+    //     let actualLeaveDurationInput = document.getElementById("workingDaysHolidayInput");
+
+    //     let startDate = new Date(startDateInput.value);
+    //     let endDate = new Date(endDateInput.value);
+
+    //     Ensure End Date is not before Start Date
+    //     endDateInput.min = startDateInput.value;
+    //     if (endDate < startDate) {
+    //         endDateInput.value = startDateInput.value;
+    //         endDate = new Date(startDateInput.value);
+    //     }
+
+    //     Set Return Date to one day after End Date
+    //     let returnDate = new Date(endDate);
+    //     returnDate.setDate(returnDate.getDate() + 1);
+    //     returnDateInput.value = returnDate.toISOString().split('T')[0];
+
+    //     Calculate total days difference including partial days
+    //     let totalDays = getDaysDifference(startDate, endDate) + 1; +1 to include both start and end dates
+    //     let totalLeaveDuration = totalDays;
+
+    //     Adjust for half-day selections
+    //     let startDayFactor = parseFloat(startDurationSelect.value === "2" ? 0.5 : 1); 2 represents Half Day
+    //     let endDayFactor = parseFloat(endDurationSelect.value === "2" ? 0.5 : 1);
+
+    //     if (startDate.toISOString().split('T')[0] === endDate.toISOString().split('T')[0]) {
+    //         Same day leave
+    //         totalLeaveDuration = startDayFactor;
+    //     } else {
+    //         Adjust for start and end days if they are partial
+    //         totalLeaveDuration = totalDays - 1 + startDayFactor + endDayFactor;
+    //     }
+
+    //     Disable End Duration if Start Date equals End Date
+    //     if (startDate.toISOString().split('T')[0] === endDate.toISOString().split('T')[0]) {
+    //         endDurationSelect.disabled = true;
+    //     } else {
+    //         endDurationSelect.disabled = false;
+    //     }
+
+    //     Count Sundays
+    //     let sundayCount = countSundays(startDateInput.value, endDateInput.value);
+
+    //     Calculate Actual Leave Duration (excluding Sundays)
+    //     let actualLeaveDuration = totalLeaveDuration - sundayCount;
+
+    //     Update inputs
+    //     totalDaysInput.value = totalLeaveDuration.toFixed(2); Ensure precision for half days
+    //     actualLeaveDurationInput.value = actualLeaveDuration.toFixed(2); Ensure precision for half days
+    // }
+
+    // Function to calculate the difference in days between two dates
+    function getDaysDifference(date1, date2) {
+        const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
+        return Math.floor((date2.getTime() - date1.getTime()) / oneDay);
+    }
+
+    // Function to count the number of Sundays between two dates
+    function countSundays(startDate, endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        let sundayCount = 0;
+
+        // Loop through all the dates between start and end
+        for (let date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
+            if (date.getDay() === 0) { // 0 represents Sunday
+                sundayCount++;
+            }
         }
 
-
-        // Set Return Date to one day after End Date
-        let returnDate = new Date(endDate);
-        returnDate.setDate(returnDate.getDate() + 1);
-        returnDateInput.value = returnDate.toISOString().split('T')[0];
-
-        // Disable End Duration if Start Date equals End Date
-        if (startDate.toISOString().split('T')[0] === endDate.toISOString().split('T')[0]) {
-            endDurationSelect.disabled = true;
-        } else {
-            endDurationSelect.disabled = false;
-        }
-
-        // Calculate total leave duration and update input
-        let totalDays = getDaysDifference(startDate, endDate) + 1; // +1 to include both start and end dates
-        totalDaysInput.value = totalDays;
-
-        // Subtract Sundays to get Actual Leave Duration
-        let sundayCount = countSundays(startDateInput.value, endDateInput.value);
-        let actualLeaveDuration = totalDays - sundayCount;
-
-        // Update Actual Leave Duration
-        actualLeaveDurationInput.value = actualLeaveDuration;
+        return sundayCount;
     }
 
     // Function to calculate the difference in days between two dates
@@ -217,6 +353,157 @@
 
         return sundayCount;
     }
+</script>
+<script>
+    // function calculateLeaveDuration() {
+    //     var startDate = document.getElementById("startDate").value;
+    //     var endDate = document.getElementById("endDate").value;
+    //     var startType = document.getElementById("start_duration").value;
+    //     var endType = document.getElementById("end_duration").value;
+    //     let returnDateInput = document.getElementById("return_date");
+    //     let returnDate = new Date(endDate);
+    //     returnDate.setDate(returnDate.getDate() + 1);
+    //     returnDateInput.value = returnDate.toISOString().split('T')[0];
 
+
+    //     // Validate if the dates are selected
+    //     if (!startDate || !endDate) {
+    //         return;
+    //     }
+
+    //     // Convert the date strings to Date objects
+    //     var start = new Date(startDate);
+    //     var end = new Date(endDate);
+
+    //     // Ensure end date is not earlier than start date
+    //     if (end < start) {
+    //         document.getElementById("endDate").value = startDate;
+    //         endDate = new Date(startDate);
+    //         end = new Date(startDate);
+    //     }
+
+    //     // Calculate total leave duration (inclusive of both start and end dates)
+    //     var timeDiff = end.getTime() - start.getTime();
+    //     var totalDays = timeDiff / (1000 * 3600 * 24) + 1; // Include both start and end day
+
+    //     // Calculate the number of Sundays in the range
+    //     var sundayCount = 0;
+    //     for (var d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    //         if (d.getDay() === 0) {
+    //             sundayCount++;
+    //         }
+    //     }
+
+    //     // Adjust actual leave duration based on full days and half days
+    //     var actualDuration = totalDays - sundayCount;
+
+    //     // If start date and end date are the same, adjust based on duration type
+    //     if (totalDays === 1) {
+    //         if (startType == 2) {
+    //             actualDuration = 0.5; // Half day
+    //             totalDays = 0.5;
+    //         } else {
+    //             actualDuration = 1; // Full day
+    //             totalDays = 1;
+    //         }
+    //     } else {
+    //         // Adjust for half-day start or end
+    //         if (startType == 2) {
+    //             actualDuration -= 0.5;
+    //             totalDays -= 0.5;
+
+    //         }
+    //         if (endType == 2) {
+    //             actualDuration -= 0.5;
+    //             totalDays-= 0.5;
+
+    //         }
+    //     }
+
+    //     // Ensure actual duration does not go negative
+    //     actualDuration = Math.max(0, actualDuration);
+
+    //     // Set the values in the corresponding input fields
+    //     document.getElementById("workingDaysHolidayInput").value = actualDuration;
+    //     document.getElementById("totalDaysHolidayInput").value = totalDays;
+    // }
+    function calculateLeaveDuration() {
+        var startDate = document.getElementById("startDate").value;
+        var endDate = document.getElementById("endDate").value;
+        var startType = document.getElementById("start_duration").value;
+        var endType = document.getElementById("end_duration");
+        let returnDateInput = document.getElementById("return_date");
+        let returnDate = new Date(endDate);
+        returnDate.setDate(returnDate.getDate() + 1);
+        returnDateInput.value = returnDate.toISOString().split('T')[0];
+
+        // Validate if the dates are selected
+        if (!startDate || !endDate) {
+            return;
+        }
+
+        // Convert the date strings to Date objects
+        var start = new Date(startDate);
+        var end = new Date(endDate);
+
+        // Ensure end date is not earlier than start date
+        if (end < start) {
+            document.getElementById("endDate").value = startDate;
+            endDate = new Date(startDate);
+            end = new Date(startDate);
+        }
+            document.getElementById("endDate").min= startDate;
+
+        // Dynamically set readonly attribute for end duration
+        if (startDate === endDate) {
+            endType.setAttribute("readonly", true);
+            endType.value = startType; // Optionally set the same value as startType
+        } else {
+            endType.removeAttribute("readonly");
+        }
+
+        // Calculate total leave duration (inclusive of both start and end dates)
+        var timeDiff = end.getTime() - start.getTime();
+        var totalDays = timeDiff / (1000 * 3600 * 24) + 1; // Include both start and end day
+
+        // Calculate the number of Sundays in the range
+        var sundayCount = 0;
+        for (var d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+            if (d.getDay() === 0) {
+                sundayCount++;
+            }
+        }
+
+        // Adjust actual leave duration based on full days and half days
+        var actualDuration = totalDays - sundayCount;
+
+        // If start date and end date are the same, adjust based on duration type
+        if (totalDays === 1) {
+            if (startType == 2) {
+                actualDuration = 0.5; // Half day
+                totalDays = 0.5;
+            } else {
+                actualDuration = 1; // Full day
+                totalDays = 1;
+            }
+        } else {
+            // Adjust for half-day start or end
+            if (startType == 2) {
+                actualDuration -= 0.5;
+                totalDays -= 0.5;
+            }
+            if (endType.value == 2) {
+                actualDuration -= 0.5;
+                totalDays -= 0.5;
+            }
+        }
+
+        // Ensure actual duration does not go negative
+        actualDuration = Math.max(0, actualDuration);
+
+        // Set the values in the corresponding input fields
+        document.getElementById("workingDaysHolidayInput").value = actualDuration;
+        document.getElementById("totalDaysHolidayInput").value = totalDays;
+    }
 
 </script>

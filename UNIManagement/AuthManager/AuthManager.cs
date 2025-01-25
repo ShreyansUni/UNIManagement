@@ -16,9 +16,8 @@ namespace UNIManagement.Controllers
             //fetch details from session----------------------------------------------------------
             var UserToken = context.HttpContext.Session.GetString("JwtToken");
             var UserId = context.HttpContext.Session.GetInt32("UserId");
-            var UserEmail= context.HttpContext.Session.GetString("Email");
+            var UserEmail= context.HttpContext.Session.GetString("Email");  
             //------------------------------------------------------------------------------------
-
             if (jwtService == null)
             {
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { Controller = "Login", Action = "Index" }));

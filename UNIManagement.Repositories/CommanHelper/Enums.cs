@@ -21,8 +21,7 @@ namespace UNIManagement.Repositories.CommanHelper
         public enum LeaveType
         {
             FullLeave =1,
-            FirstHalf=2,
-            SecondHalf=3
+           HalfDay=2
         }
     }
 }

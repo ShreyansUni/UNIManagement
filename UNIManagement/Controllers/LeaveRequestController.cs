@@ -12,18 +12,20 @@ namespace UNIManagement.Controllers
         {
             _leaveRequestRepository = leaveRequestRepository;
         }
+
+        #region LEAVE REQUEST PAGE & SUBMIT LEAVE
         public IActionResult LeaveRequestFormPage()
         {
             LeaveRequestViewModel model = new();
             model.LeaveRequestorID = (int)HttpContext.Session.GetInt32("UserId");
             model.LeaveRequestorName = HttpContext.Session.GetString("Name");
-
             return View(model);
         }
         public IActionResult SubmitLeaveRequest(LeaveRequestViewModel model)
         {
             try
             {
+                var userId=HttpContext.Session.GetInt32("UserId");
                 _leaveRequestRepository.SubmitLeave(model);
                 return RedirectToAction("LeaveRequestListing");
             }
@@ -32,6 +34,9 @@ namespace UNIManagement.Controllers
                 return RedirectToAction("LeaveRequestListing");
             }
         }
+        #endregion
+        
+        #region LEAVE REQUEST LISTING
         public IActionResult LeaveRequestListing()
         {
             int UserId = HttpContext.Session.GetInt32("UserId") ?? -1;
@@ -43,7 +48,9 @@ namespace UNIManagement.Controllers
             }
             return View(model);
         }
+        #endregion
         
+        #region DELETE LEAVE
         public IActionResult DeleteLeaveRequest(int leaveRecordID)
         {
             _leaveRequestRepository.DeleteLeaveRecord(leaveRecordID);
@@ -51,10 +58,14 @@ namespace UNIManagement.Controllers
             List<LeaveRequestViewModel> model = _leaveRequestRepository.GetLeaveRequestList(UserId);
             return RedirectToAction("LeaveRequestListing",model);
         }
+        #endregion
+        
+        #region EDIT LEAVE
         public IActionResult EditLeaveRequest(int leaveRequestId)
         {
             LeaveRequestViewModel model= _leaveRequestRepository.GetLeaveRecord(leaveRequestId);
             return View("LeaveRequestFormPage",model);
         }
+        #endregion
     }
 }
